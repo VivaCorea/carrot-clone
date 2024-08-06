@@ -14,8 +14,7 @@ const formScheme = z.object({
     .min(PASSWORD_MIN_LEN)
     .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERR),
 });
-export const login = async (prevState: any, formData: FormData) => {
-  //const password = formData.get("password");
+export const smsVerification = async (prevState: any, formData: FormData) => {
   const data = {
     email: formData.get("email"),
     password: formData.get("password"),
