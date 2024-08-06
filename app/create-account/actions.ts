@@ -1,9 +1,12 @@
 "use server";
+import {
+  PASSWORD_MIN_LEN,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERR,
+} from "@/lib/constants";
 import { z } from "zod";
-const passwordRegex = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/
-);
-//const usernameScheme = z.string().min(5).max(10);
+const passwordRegex = PASSWORD_REGEX;
+//const usernameScheme = z.string().min(5).max(PASSWORD_MIN_LEN);
 const chkUserName = (name: string) => {
   return !name.includes("potato");
 };
@@ -23,8 +26,6 @@ const formScheme = z
         invalid_type_error: "type!! is not string",
         required_error: "name is required",
       })
-      .min(3, "Way tto short!")
-      .max(10, "That is Too Loooooong")
       .toLowerCase()
       .trim()
       .transform((username) => `!!${username}!!`)
@@ -32,12 +33,9 @@ const formScheme = z
     email: z.string().email(),
     password: z
       .string()
-      .min(10)
-      .regex(
-        passwordRegex,
-        "a password must have lowercase, uppercase a number and special characters."
-      ),
-    confirm_password: z.string().min(10),
+      .min(PASSWORD_MIN_LEN)
+      .regex(passwordRegex, PASSWORD_REGEX_ERR),
+    confirm_password: z.string().min(PASSWORD_MIN_LEN),
   })
   .refine(chkPasswords, {
     message: "Both password should be same~",
