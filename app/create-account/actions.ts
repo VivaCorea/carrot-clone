@@ -1,6 +1,8 @@
 "use server";
 import { z } from "zod";
 
+const usernameScheme = z.string().min(5).max(10);
+
 export async function createAccount(prevState: any, formData: FormData) {
   const data = {
     userName: formData.get("userName"),
@@ -8,5 +10,5 @@ export async function createAccount(prevState: any, formData: FormData) {
     password: formData.get("password"),
     confirm_password: formData.get("confirm_password"),
   };
-  console.log(data);
+  usernameScheme.parse(data.userName);
 }
