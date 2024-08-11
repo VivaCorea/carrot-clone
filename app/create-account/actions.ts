@@ -4,9 +4,9 @@ import {
   PASSWORD_REGEX,
   PASSWORD_REGEX_ERR,
 } from "@/lib/constants";
+import db from "@/lib/db";
 import { z } from "zod";
 const passwordRegex = PASSWORD_REGEX;
-//const usernameScheme = z.string().min(5).max(PASSWORD_MIN_LEN);
 const chkUserName = (name: string) => {
   return !name.includes("potato");
 };
@@ -18,6 +18,18 @@ const chkPasswords = ({
   password: string;
   confirm_password: string;
 }) => password === confirm_password;
+
+const checkUniqueUsername = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return !Boolean(user);
+};
 
 const formScheme = z
   .object({
