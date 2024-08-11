@@ -24,11 +24,11 @@ export default function Login() {
           errors={state?.fieldErrors.email}
         />
         <Input
-          name="userName"
+          name="username"
           type="text"
           placeholder="UserName"
           required
-          errors={state?.fieldErrors.userName}
+          errors={state?.fieldErrors.username}
         />
         <Input
           name="password"

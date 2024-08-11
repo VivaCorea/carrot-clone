@@ -40,7 +40,7 @@ export const login = async (prevState: any, formData: FormData) => {
   const password = formData.get("password");
 
   const data = {
-    userName: formData.get("userName"),
+    username: formData.get("username"),
     email: formData.get("email"),
     password: formData.get("password"),
   };
