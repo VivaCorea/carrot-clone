@@ -16,11 +16,11 @@ export default function CreateAccount() {
       </div>
       <form className="flex flex-col gap-3" action={action}>
         <Input
-          name="userName"
+          name="username"
           type="text"
           placeholder="Username"
           required
-          errors={state?.fieldErrors.userName}
+          errors={state?.fieldErrors.username}
         />
         <Input
           name="email"
@@ -47,7 +47,6 @@ export default function CreateAccount() {
         />
         <Button text="Create Account" />
       </form>
-
       <SocialLogin />
     </div>
   );
