@@ -23,8 +23,8 @@ export default function TabBar() {
   const pathname = usePathname();
   return (
     <div className="fixed bottom-0 w-full mx-auto max-w-screen-md grid grid-cols-6 border-neutral-600 border-t px-5 py-3 *:text-white">
-      <Link href="/tweets" className="flex flex-col items-center gap-px">
-        {pathname === "/tweets" ? (
+      <Link href="/" className="flex flex-col items-center gap-px">
+        {pathname === "/tweets" || pathname === "/" ? (
           <ChatBubbleBottomCenterIcon className="w-7 h-7" />
         ) : (
           <OutlineChatBubbleBottomCenterIcon className="w-7 h-7" />

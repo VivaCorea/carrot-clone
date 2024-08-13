@@ -6,6 +6,7 @@ import { useFormState } from "react-dom";
 import { login } from "./actions";
 import SocialLogin from "@/components/social-login";
 import { PASSWORD_MIN_LEN } from "@/lib/constants";
+import Link from "next/link";
 
 export default function Login() {
   const [state, action] = useFormState(login, null);
@@ -34,6 +35,11 @@ export default function Login() {
           errors={state?.fieldErrors.password}
         />
         <Button text="Log in" />
+        <div className="flex flex-col items-center gap-3 w-full">
+          <Link href="/create-account" className="primary-btn py-2.5">
+            Create Account
+          </Link>
+        </div>
       </form>
       <SocialLogin />
     </div>
