@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { formatToTimeAgo } from "@/lib/util";
 import Link from "next/link";
 
 interface ListTweetProps {
@@ -13,7 +13,7 @@ export default function ListTweet({ tweet, created_at, id }: ListTweetProps) {
       <div className="flex flex-col gap-1 *:text-white">
         <span className="text-lg">{tweet}</span>
         <span className="text-sm text-neutral-500">
-          {created_at.toString()}
+          {formatToTimeAgo(created_at.toString())}
         </span>
       </div>
     </Link>
