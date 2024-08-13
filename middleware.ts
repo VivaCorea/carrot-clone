@@ -31,6 +31,7 @@ export async function middleware(req: NextRequest) {
   } else {
     if (exists) {
       return NextResponse.redirect(new URL("/products", req.url));
+      //return NextResponse.redirect(new URL("/", req.url));
     }
   }
 }
