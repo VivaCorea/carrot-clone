@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
   } */
   const session = await getSession();
   const exists = publicOnlyUrls[req.nextUrl.pathname];
-  console.log("middleware");
+  console.log("middleware", req.nextUrl.pathname, session);
   if (!session.id) {
     console.log("middleware no session");
     if (!exists) {
@@ -34,7 +34,7 @@ export async function middleware(req: NextRequest) {
     }
   } else {
     console.log("middleware has session");
-
+    //return NextResponse.redirect(new URL("/", req.url));
     if (exists) {
       console.log("middleware has session and exists");
       //return NextResponse.redirect(new URL("/products", req.url));

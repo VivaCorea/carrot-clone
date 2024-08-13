@@ -1,4 +1,5 @@
 import TweetList from "@/components/tweet-list";
+import { PAGE_AMOUNT } from "@/lib/constants";
 import db from "@/lib/db";
 import { Prisma } from "@prisma/client";
 
@@ -9,7 +10,7 @@ async function getInitialTweets() {
       created_at: true,
       id: true,
     },
-    take: 1,
+    take: PAGE_AMOUNT,
     orderBy: {
       created_at: "desc",
     },

@@ -1,5 +1,6 @@
 "use server";
 
+import { PAGE_AMOUNT } from "@/lib/constants";
 import db from "@/lib/db";
 
 export async function getMoreTweets(page: number) {
@@ -9,11 +10,16 @@ export async function getMoreTweets(page: number) {
       created_at: true,
       id: true,
     },
-    skip: 1,
-    take: 1,
+    skip: PAGE_AMOUNT * page,
+    take: PAGE_AMOUNT,
     orderBy: {
       created_at: "desc",
     },
   });
   return tweets;
+}
+
+export async function getTweetLastPage() {
+  const tweetsLen = await db.tweet.count();
+  return Math.round(tweetsLen / PAGE_AMOUNT);
 }

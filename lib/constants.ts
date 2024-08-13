@@ -4,3 +4,4 @@ export const PASSWORD_REGEX = new RegExp(
 );
 export const PASSWORD_REGEX_ERR =
   "a password must have lowercase, uppercase a number and special characters.";
+export const PAGE_AMOUNT = 2;
