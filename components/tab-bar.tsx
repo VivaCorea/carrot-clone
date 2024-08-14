@@ -37,7 +37,7 @@ export default function TabBar() {
         ) : (
           <OutlineHomeIcon className="w-7 h-7" />
         )}
-        <span>홈</span>
+        <span>Products</span>
       </Link>
       <Link href="/life" className="flex flex-col items-center gap-px">
         {pathname === "/life" ? (

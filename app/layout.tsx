@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AddTweet from "@/components/add-tweet";
-import TabBar from "@/components/tab-bar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +25,6 @@ export default function RootLayout({
       >
         <AddTweet />
         {children}
-        <TabBar />
       </body>
     </html>
   );
