@@ -10,7 +10,7 @@ interface Routes {
 }
 
 const publicOnlyUrls: Routes = {
-  "/": true,
+  //"/": true,
   "/login": true,
   "/sms": true,
   "/create-account": true,
@@ -29,16 +29,24 @@ export async function middleware(req: NextRequest) {
     console.log("middleware no session");
     if (!exists) {
       console.log("middleware no session not exists");
-      return NextResponse.redirect(new URL("/", req.url));
-      //return NextResponse.redirect(new URL("/create-account", req.url));
+      //return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/login", req.url));
     }
   } else {
     console.log("middleware has session");
-    //return NextResponse.redirect(new URL("/", req.url));
+    //if (req.nextUrl.pathname !== "/") {
+    //  return NextResponse.redirect(new URL("/", req.url));
+    //} else
     if (exists) {
       console.log("middleware has session and exists");
       //return NextResponse.redirect(new URL("/products", req.url));
       return NextResponse.redirect(new URL("/tweets", req.url));
     }
+    //return NextResponse.redirect(new URL("/", req.url));
+    /* if (exists) {
+      console.log("middleware has session and exists");
+      //return NextResponse.redirect(new URL("/products", req.url));
+      return NextResponse.redirect(new URL("/tweets", req.url));
+    } */
   }
 }

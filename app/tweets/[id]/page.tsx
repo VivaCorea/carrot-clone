@@ -64,8 +64,16 @@ export default async function TweetDetail({
         </div>
       </div>
       <div className="p-5">
-        <h1 className="text-2xl font-semibold">Contents</h1>
-        <p>{tweet.tweet}</p>
+        <h3 className="text-xl font-semibold">
+          What {tweet.user.username} says ...
+        </h3>
+        <p className="mt-5 mb-5">{tweet.tweet}</p>
+        <Link
+          href="/"
+          className="bg-orange-500 px-2 py-2 rounded-md text-white text-sm font-semibold"
+        >
+          Back
+        </Link>
       </div>
       <div className="fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-between items-center">
         {isOwner ? (
