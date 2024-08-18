@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { HandThumbUpIcon, UserIcon } from "@heroicons/react/24/solid";
+import { revalidatePath } from "next/cache";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,20 +15,35 @@ async function getIsOwner(userId: number) {
 }
 
 async function getTweet(id: number) {
-  const tweet = await db.tweet.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      user: {
-        select: {
-          username: true,
-          avatar: true,
+  try {
+    const post = await db.tweet.update({
+      where: {
+        id,
+      },
+      data: {
+        views: {
+          increment: 1,
         },
       },
-    },
-  });
-  return tweet;
+      include: {
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+        _count: {
+          select: {
+            response: true,
+            likes: true,
+          },
+        },
+      },
+    });
+    return post;
+  } catch (e) {
+    return null;
+  }
 }
 
 export default async function TweetDetail({
@@ -43,6 +59,49 @@ export default async function TweetDetail({
   if (!tweet) {
     return notFound();
   }
+
+  const likeTweet = async () => {
+    "use server";
+    const session = await getSession();
+    try {
+      await db.like.create({
+        data: {
+          tweet_id: id,
+          user_id: session.id!,
+        },
+      });
+      revalidatePath(`/tweets/${id}`);
+    } catch (e) {}
+  };
+
+  const dislikeTweet = async () => {
+    "use server";
+    try {
+      const session = await getSession();
+      await db.like.delete({
+        where: {
+          id: {
+            tweet_id: id,
+            user_id: session.id!,
+          },
+        },
+      });
+      revalidatePath(`/post/${id}`);
+    } catch (e) {}
+  };
+  async function getIsTweetLiked(tweet_id: number) {
+    const session = await getSession();
+    const like = await db.like.findUnique({
+      where: {
+        id: {
+          tweet_id,
+          user_id: session.id!,
+        },
+      },
+    });
+    return Boolean(like);
+  }
+  const isLiked = await getIsTweetLiked(id);
   const isOwner = await getIsOwner(tweet.user_id);
   return (
     <div>
@@ -81,12 +140,12 @@ export default async function TweetDetail({
             Delete tweet
           </button>
         ) : null}
-        <Link
-          className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
-          href={``}
-        >
-          Like
-        </Link>
+        <form action={isLiked ? dislikeTweet : likeTweet}>
+          <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
+            <HandThumbUpIcon className="size-5" />{" "}
+            <span>Like ({tweet._count.likes})</span>
+          </button>
+        </form>
       </div>
     </div>
   );

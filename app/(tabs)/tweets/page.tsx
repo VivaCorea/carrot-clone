@@ -9,6 +9,12 @@ async function getInitialTweets() {
       tweet: true,
       created_at: true,
       id: true,
+      _count: {
+        select: {
+          response: true,
+          likes: true,
+        },
+      },
     },
     take: PAGE_AMOUNT,
     orderBy: {
