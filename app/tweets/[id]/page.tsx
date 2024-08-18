@@ -6,6 +6,9 @@ import { unstable_cache as nextCache, revalidateTag } from "next/cache";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import LikeButton from "@/components/btn-like-tweet";
+import Input from "@/components/input";
+import AddResponse from "@/components/add-response";
+//import { getResponseList } from "../(addComment)/actions";
 
 async function getTweet(id: number) {
   try {
@@ -38,7 +41,7 @@ async function getTweet(id: number) {
   }
 }
 
-const getCachedPost = nextCache(getTweet, ["tweet-detail"], {
+const getCachedTweet = nextCache(getTweet, ["tweet-detail"], {
   tags: ["tweet-detail"],
   revalidate: 60,
 });
@@ -64,9 +67,32 @@ async function getLikeStatus(tweet_id: number) {
   };
 }
 
+async function getResStatus(tweetId: number) {
+  const session = await getSession();
+  const isAdded = await db.response.findUnique({
+    where: {
+      id: {
+        tweetId,
+        userId: session.id!,
+      },
+    },
+  });
+  return {
+    payload: isAdded?.payload,
+    isAdded: Boolean(isAdded),
+  };
+}
+
 function getCachedLikeStatus(tweet_id: number) {
   const cachedOperation = nextCache(getLikeStatus, ["tweet-like-status"], {
     tags: [`like-status-${tweet_id}`],
+  });
+  return cachedOperation(tweet_id);
+}
+
+function getCachedResStatus(tweet_id: number) {
+  const cachedOperation = nextCache(getResStatus, ["tweet-res-status"], {
+    tags: [`res-status-${tweet_id}`],
   });
   return cachedOperation(tweet_id);
 }
@@ -80,11 +106,15 @@ export default async function TweetDetail({
   if (isNaN(id)) {
     return notFound();
   }
-  const tweet = await getCachedPost(id);
+  const tweet = await getCachedTweet(id);
   if (!tweet) {
     return notFound();
   }
   const { likeCount, isLiked } = await getCachedLikeStatus(id);
+  const { payload, isAdded } = await getCachedResStatus(id);
+
+  //const responses = await getResponses(id);
+
   return (
     <div className="p-5 text-white">
       <div className="flex items-center gap-2 mb-2">
@@ -109,6 +139,7 @@ export default async function TweetDetail({
           <span>Views {tweet.views}</span>
         </div>
         <LikeButton isLiked={isLiked} likeCount={likeCount} tweet_id={id} />
+        <AddResponse isAdded={isAdded} payload={payload} tweet_id={id} />
       </div>
     </div>
   );
