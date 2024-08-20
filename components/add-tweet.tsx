@@ -13,7 +13,7 @@ export default function AddTweet() {
     <>
       {pathname === "/" ? (
         <div>
-          <form action={action} className="flex flex-col py-5 gap-2">
+          <form action={action} className="flex flex-col pb-5 gap-2">
             <Input
               name="tweet"
               type="text"
