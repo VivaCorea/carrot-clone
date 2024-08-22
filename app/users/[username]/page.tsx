@@ -70,13 +70,15 @@ export default async function UserNameDetail({
   const tweets = await getTweetsFromUserId(user.id);
   return (
     <>
+      <div className="border-b-2 p-2 m-2 text-2xl">User Profile</div>
+
       <UserDetail key={user.id} {...userDetail} />
       {isOwner ? (
         <Link href={`/users/${user.username}/edit`} className="flex gap-5">
           <span>Edit</span>
         </Link>
       ) : null}
-      <div className="mb-2"></div>
+      <div className="m-2"></div>
       <div className="border-t-2 p-2 text-2xl">Tweets</div>
       <div className="p-5 flex flex-col gap-5">
         {tweets.map((item) => (

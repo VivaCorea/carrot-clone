@@ -1,48 +1,61 @@
 "use server";
 
-import fs from "fs/promises";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
-import { redirect } from "next/navigation";
-import { productSchema } from "./schema";
+import { formScheme, userSchema } from "./schema";
+import bcrypt from "bcrypt";
+import { revalidatePath } from "next/cache";
+import { redirect, useRouter } from "next/navigation";
 
-export async function uploadProduct(_: any, formData: FormData) {
-  console.log(formData);
+export async function getUser() {
+  const session = await getSession();
+  const user = await db.user.findUnique({
+    where: {
+      id: session.id,
+    },
+  });
+  return user;
+}
+
+export async function _updateUser(_: any, formData: FormData) {
   const data = {
-    photo: formData.get("photo"),
-    title: formData.get("title"),
-    price: formData.get("price"),
-    description: formData.get("description"),
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    bio: formData.get("bio"),
   };
-  if (data.photo instanceof File) {
-    const photoData = await data.photo.arrayBuffer();
-    await fs.appendFile(`./public/${data.photo.name}`, Buffer.from(photoData));
-    data.photo = `/${data.photo.name}`;
-  }
-  const result = productSchema.safeParse(data);
-  if (!result.success) {
-    return result.error.flatten();
+  console.log(-1);
+  //const rst = await formScheme.spa(data);
+  const rst = await userSchema.safeParse(data);
+  console.log(0);
+  if (!rst.success) {
+    return rst.error.flatten();
   } else {
-    const session = await getSession();
-    if (session.id) {
-      const product = await db.product.create({
+    console.log(1);
+    try {
+      const session = await getSession();
+      console.log(session);
+      const hashedPassword = await bcrypt.hash(rst.data.password, 12);
+      const user = await db.user.update({
+        where: {
+          id: session?.id,
+        },
         data: {
-          title: result.data.title,
-          description: result.data.description,
-          price: result.data.price,
-          photo: result.data.photo,
-          user: {
-            connect: {
-              id: session.id,
-            },
-          },
+          username: rst.data.username,
+          email: rst.data.email,
+          bio: rst.data.bio,
+          password: hashedPassword,
         },
         select: {
           id: true,
         },
       });
-      redirect(`/products/${product.id}`);
-      //redirect("/products")
-    }
+      console.log(`${rst.data.username}`);
+      //revalidatePath(`/users/${rst.data.username}/edit`);
+      //const { replace } = useRouter();
+      //replace(`/`);
+      redirect(`/`);
+      console.log(333);
+    } catch (e) {}
   }
 }
