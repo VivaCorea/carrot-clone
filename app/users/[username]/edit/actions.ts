@@ -24,17 +24,15 @@ export async function _updateUser(_: any, formData: FormData) {
     password: formData.get("password"),
     bio: formData.get("bio"),
   };
-  console.log(-1);
-  //const rst = await formScheme.spa(data);
-  const rst = await userSchema.safeParse(data);
-  console.log(0);
+
+  const rst = await formScheme.spa(data);
+  //const rst = await userSchema.safeParse(data);
+
   if (!rst.success) {
     return rst.error.flatten();
   } else {
-    console.log(1);
     try {
       const session = await getSession();
-      console.log(session);
       const hashedPassword = await bcrypt.hash(rst.data.password, 12);
       const user = await db.user.update({
         where: {
@@ -50,12 +48,9 @@ export async function _updateUser(_: any, formData: FormData) {
           id: true,
         },
       });
-      console.log(`${rst.data.username}`);
-      //revalidatePath(`/users/${rst.data.username}/edit`);
-      //const { replace } = useRouter();
-      //replace(`/`);
-      redirect(`/`);
-      console.log(333);
+      revalidatePath(`/users/${rst.data.username}/edit`);
     } catch (e) {}
+
+    redirect(`/users/${rst.data.username}`);
   }
 }

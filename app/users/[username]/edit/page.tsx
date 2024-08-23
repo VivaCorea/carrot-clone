@@ -4,22 +4,21 @@ import { unstable_cache as nextCache } from "next/cache";
 import db from "@/lib/db";
 import EditUser from "@/components/edit-user";
 
-/* const getCachedUser = nextCache(getUser, ["user-detail"], {
+const getCachedUser = nextCache(getUser, ["user-detail"], {
   tags: ["user-detail"],
   revalidate: 60,
 });
 async function getUserStatus(username: string) {
-  const isUnique = await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
       username,
     },
   });
 
   return {
-    email: isUnique?.email,
-    bio: isUnique?.bio,
-    password: isUnique?.password,
-    isUnique: Boolean(isUnique),
+    email: user?.email,
+    bio: user?.bio,
+    password: user?.password,
   };
 }
 
@@ -28,14 +27,14 @@ function getCachedUserStatus(username: string) {
     tags: [`res-status-${username}`],
   });
   return cachedOperation(username);
-} */
+}
 
 export default async function EditUserPage({
   params,
 }: {
   params: { username: string };
 }) {
-  /* const username = params.username;
+  const username = params.username;
   if (username === null || username === "" || username === undefined) {
     return notFound();
   }
@@ -44,24 +43,7 @@ export default async function EditUserPage({
     return notFound();
   }
 
-  const { isUnique, email, bio, password } = await getCachedUserStatus(
-    username
-  ); */
-
-  const hasUsername = await db.user.findUnique({
-    where: {
-      username: params.username,
-    },
-  });
-  if (!hasUsername) {
-    return notFound();
-  }
-  const user = await getUser();
-  const email = user?.email;
-  const bio = user?.bio;
-  const password = user?.email;
-  const username = params?.username;
-  console.log("hello");
+  const { email, bio, password } = await getCachedUserStatus(username);
   return (
     <EditUser
       isChanged={false}
