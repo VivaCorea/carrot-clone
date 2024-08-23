@@ -31,6 +31,14 @@ export default function TabBar() {
         )}
         <span>Tweet</span>
       </Link>
+      <Link href="/users" className="flex flex-col items-center gap-px">
+        {pathname === "/users" ? (
+          <SolidChatIcon className="w-7 h-7" />
+        ) : (
+          <OutlineChatIcon className="w-7 h-7" />
+        )}
+        <span>Users</span>
+      </Link>
       <Link href="/products" className="flex flex-col items-center gap-px">
         {pathname === "/products" ? (
           <SolidHomeIcon className="w-7 h-7" />
@@ -46,14 +54,6 @@ export default function TabBar() {
           <OutlineNewspaperIcon className="w-7 h-7" />
         )}
         <span>동네생활</span>
-      </Link>
-      <Link href="/chat" className="flex flex-col items-center gap-px">
-        {pathname === "/chat" ? (
-          <SolidChatIcon className="w-7 h-7" />
-        ) : (
-          <OutlineChatIcon className="w-7 h-7" />
-        )}
-        <span>채팅</span>
       </Link>
       <Link href="/live" className="flex flex-col items-center gap-px">
         {pathname === "/live" ? (

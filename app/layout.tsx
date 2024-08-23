@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AddTweet from "@/components/add-tweet";
+import SearchTweet from "@/components/search-tweet";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} bg-neutral-900 text-white max-w-screen-sm mx-auto`}
       >
+        <SearchTweet />
         <AddTweet />
         {children}
       </body>
